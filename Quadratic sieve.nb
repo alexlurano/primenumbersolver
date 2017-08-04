@@ -1,0 +1,399 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     12625,        390]
+NotebookOptionsPosition[     11291,        340]
+NotebookOutlinePosition[     11634,        355]
+CellTagsIndexPosition[     11591,        352]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Quadratic Sieve", "Title",
+ CellChangeTimes->{{3.6358103299435267`*^9, 3.635810341023161*^9}}],
+
+Cell["\<\
+Test implementation of the sorting algorithm\
+\>", "Subtitle",
+ CellChangeTimes->{{3.6358103460074453`*^9, 3.6358103559190125`*^9}}],
+
+Cell["By Alex Gerhards", "Subsubtitle",
+ CellChangeTimes->{{3.635810435182546*^9, 3.635810437822697*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+sieving procedure and Dixon\[CloseCurlyQuote]s factorization method\
+\>", "Section",
+ CellChangeTimes->{{3.635810450598428*^9, 3.6358104576538315`*^9}, {
+  3.6358105198383884`*^9, 3.6358105981888695`*^9}}],
+
+Cell["\<\
+To factor n pick values of r given by\t\
+\>", "Text",
+ CellChangeTimes->{{3.6358106054212832`*^9, 3.6358106210851793`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"TestN", "=", "1220"}], ";"}], "\n", 
+ RowBox[{"lowPrimes", "=", 
+  RowBox[{"{", 
+   RowBox[{
+   "2", ",", "3", ",", "5", ",", "7", ",", "11", ",", "13", ",", "17", ",", 
+    "19", ",", "23"}], "}"}]}], "\n", 
+ RowBox[{
+  RowBox[{"k", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7", ",", "8",
+      ",", "9"}], "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"r", "[", "n_", "]"}], ":=", " ", 
+   RowBox[{
+    RowBox[{"Floor", "[", 
+     RowBox[{"Sqrt", "[", "n", "]"}], "]"}], "+", "k"}]}], ";"}], "\n", 
+ RowBox[{"r", "[", "5", "]"}]}], "Code",
+ CellChangeTimes->{{3.635810625006404*^9, 3.635810651637927*^9}, {
+  3.635810752436692*^9, 3.635810827892008*^9}, {3.6358109313879275`*^9, 
+  3.635810935564166*^9}, {3.6358109672999816`*^9, 3.6358110088913603`*^9}, {
+  3.635812424505329*^9, 3.6358124404492407`*^9}, {3.635812747806821*^9, 
+  3.6358127872470765`*^9}, {3.63581281755881*^9, 3.6358128193429127`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "2", ",", "3", ",", "5", ",", "7", ",", "11", ",", "13", ",", "17", ",", 
+   "19", ",", "23"}], "}"}]], "Output",
+ CellChangeTimes->{{3.6358109959566207`*^9, 3.6358110093463864`*^9}, 
+   3.6358124958004065`*^9, 3.6358128229841204`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "3", ",", "4", ",", "5", ",", "6", ",", "7", ",", "8", ",", "9", ",", "10", 
+   ",", "11"}], "}"}]], "Output",
+ CellChangeTimes->{{3.6358109959566207`*^9, 3.6358110093463864`*^9}, 
+   3.6358124958004065`*^9, 3.6358128229861207`*^9}]
+}, Open  ]],
+
+Cell[TextData[{
+ "We are looking for factors p such that\n",
+ Cell[BoxData[
+  RowBox[{"n", "=", 
+   RowBox[{"Mod", "[", 
+    RowBox[{
+     SuperscriptBox["r", "2"], ",", "p"}], "]"}]}]]]
+}], "Text",
+ CellChangeTimes->{{3.6358110902980165`*^9, 3.6358110966653805`*^9}, {
+  3.6358122971930475`*^9, 3.6358122975720687`*^9}}],
+
+Cell["\<\
+Only numbers with the Legendre symbol (n/p)= 1 need be considered
+\
+\>", "Text",
+ CellChangeTimes->{{3.635812021691289*^9, 3.63581206366669*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Legendre Symbol", "Subsubsection",
+ CellChangeTimes->{{3.6358120708030987`*^9, 3.63581207414629*^9}}],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"(", 
+     FractionBox["n", "p"], ")"}], "=", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"n", "|", "p"}], ")"}], " ", "=", " ", "{"}]}], 
+   TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "0\tif p|n\n\t\t 1\tif n is a quadratic residue modulo p\n\t\t -1\tif n is a \
+quadratic nonresidue modulo p\n\t\t \nThe Legendre symbol is implemented via \
+the Jacobi symbol,\n\nJacobiSymbol[n,p]\n\nwhere n is the number to be \
+factored. We can insert an array of low primes.\nPrimes that return a 1 are \
+part of the factor base"
+}], "Text",
+ CellChangeTimes->{{3.6358120975386276`*^9, 3.63581219112198*^9}, {
+  3.635812720926283*^9, 3.6358127379742584`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\n", 
+  RowBox[{
+   RowBox[{"JacobiSymbol", "[", 
+    RowBox[{"TestN", ",", "lowPrimes"}], "]"}], "\n", 
+   RowBox[{"factorBase", "=", 
+    RowBox[{"{", 
+     RowBox[{"7", ",", "17", ",", "19", ",", "23"}], "}"}]}]}]}]], "Code",
+ CellChangeTimes->{{3.635812225082923*^9, 3.6358122604499454`*^9}, {
+  3.635812352961237*^9, 3.6358123680250983`*^9}, {3.6358124478016615`*^9, 
+  3.6358124501287947`*^9}, {3.6358124823526373`*^9, 3.6358125448962145`*^9}, {
+  3.6358126313831615`*^9, 3.635812718471143*^9}, {3.63581282891846*^9, 
+  3.6358128316866183`*^9}, {3.6358142994035673`*^9, 3.6358143913068237`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0", ",", 
+   RowBox[{"-", "1"}], ",", "0", ",", "1", ",", 
+   RowBox[{"-", "1"}], ",", 
+   RowBox[{"-", "1"}], ",", "1", ",", "1", ",", "1"}], "}"}]], "Output",
+ CellChangeTimes->{{3.6358124885929947`*^9, 3.6358124976475124`*^9}, 
+   3.635812832135644*^9, 3.635814364263277*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"7", ",", "17", ",", "19", ",", "23"}], "}"}]], "Output",
+ CellChangeTimes->{{3.6358124885929947`*^9, 3.6358124976475124`*^9}, 
+   3.635812832135644*^9, 3.6358143642642765`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Congruences", "Subsubsection",
+ CellChangeTimes->{{3.6358128595652127`*^9, 3.6358128617973404`*^9}}],
+
+Cell[TextData[{
+ "\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["x", "2"], "=", 
+    RowBox[{"Mod", "[", 
+     RowBox[{"n", ",", "p"}], "]"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "\n\nmust be solved for each p in the factor base.\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", 
+    RowBox[{
+     SuperscriptBox["x", "2"], "-", "n"}], ")"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "\n\nCongruence occurs when ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", 
+    RowBox[{
+     SuperscriptBox["x", "2"], "-"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "n) is divisible by p\n\nfinally a sieve is applied to find values of ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"f", 
+     RowBox[{"(", "r", ")"}]}], "=", 
+    RowBox[{
+     SuperscriptBox["r", "2"], "-", "n"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " factorable by the factor base\n\n\n(\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     SuperscriptBox[
+      RowBox[{"(", 
+       SubscriptBox["f", "1"], ")"}], "c1"], "*", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SubscriptBox["f", "2"], ")"}], "c2"], "*", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SubscriptBox["f", "3"], ")"}], "c3"]}], "=", 
+    RowBox[{"(", 
+     RowBox[{
+      SuperscriptBox["r", "2"], "-", "n"}], ")"}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " solve for r\n\n)\n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", 
+    RowBox[{"c1", ",", "c2", ",", "c3", ",", "c4"}], "}"}], TraditionalForm]],
+  FormatType->"TraditionalForm"]
+}], "Text",
+ CellChangeTimes->{{3.6358128678136845`*^9, 3.635812905780856*^9}, {
+  3.6358130116679125`*^9, 3.635813032550107*^9}, {3.63581480717561*^9, 
+  3.6358148724793453`*^9}, {3.6358158800719757`*^9, 3.635815885787303*^9}, {
+  3.635816250141143*^9, 3.6358162600137076`*^9}, {3.635816980399911*^9, 
+  3.6358171214949813`*^9}, {3.6358176658591175`*^9, 3.6358177043753204`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Congruencefunc", "[", "TestX_", "]"}], ":=", 
+    RowBox[{"Mod", "[", 
+     RowBox[{
+      RowBox[{
+       SuperscriptBox["TestX", "2"], "-", "TestN"}], ",", "factorBase"}], 
+     "]"}]}], "\n", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Congruencefunc", "[", "x", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", "0", ",", "15"}], "}"}]}], "]"}]}]}]], "Code",
+ CellChangeTimes->{{3.635814397499178*^9, 3.6358144170452957`*^9}, {
+   3.635814578113508*^9, 3.635814578441527*^9}, {3.6358149578952303`*^9, 
+   3.6358149605993853`*^9}, {3.6358149938232856`*^9, 
+   3.6358150245270414`*^9}, {3.635816001719934*^9, 3.6358160487596245`*^9}, {
+   3.6358160807594547`*^9, 3.6358161043598046`*^9}, 3.6358163015900855`*^9, {
+   3.635816342141405*^9, 3.6358163502458687`*^9}, {3.635816441237073*^9, 
+   3.635816457661012*^9}, {3.6358167337788053`*^9, 3.635816844482137*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"5", ",", "4", ",", "15", ",", "22"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6", ",", "5", ",", "16", ",", "0"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "8", ",", "0", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "13", ",", "5", ",", "8"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "3", ",", "12", ",", "15"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "12", ",", "2", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6", ",", "6", ",", "13", ",", "12"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"5", ",", "2", ",", "7", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6", ",", "0", ",", "3", ",", "17"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "0", ",", "1", ",", "11"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "2", ",", "1", ",", "7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "6", ",", "3", ",", "5"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "12", ",", "7", ",", "5"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6", ",", "3", ",", "13", ",", "7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"5", ",", "13", ",", "2", ",", "11"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"6", ",", "8", ",", "12", ",", "17"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.6358144190504103`*^9, 3.635816049802684*^9, 
+  3.635816106814945*^9, 3.635816351867961*^9, 3.6358167470955667`*^9, 
+  3.6358168450491695`*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Virginia document on quad sieve past legendre\
+\>", "Subsection",
+ CellChangeTimes->{{3.6358154287631626`*^9, 3.635815439522778*^9}}],
+
+Cell[TextData[{
+ "sieving interval [-M,M] should only be considered for finding x in Q(x)\n\n\
+\nFor each prime p in the factor base we solve \n",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     RowBox[{"Q", 
+      RowBox[{"(", "x", ")"}]}], "=", 
+     RowBox[{
+      SuperscriptBox["s", "2"], "\[Congruent]", 
+      RowBox[{"0", 
+       RowBox[{"(", "modp", ")"}]}]}]}], ",", 
+    RowBox[{"x", "\[Element]", 
+     SubscriptBox["Z", "p"]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"]
+}], "Text",
+ CellChangeTimes->{{3.6358151875563664`*^9, 3.6358152457186933`*^9}, {
+  3.6358152906382627`*^9, 3.6358152943674755`*^9}, {3.635815345760415*^9, 
+  3.6358153610312886`*^9}, {3.6358154177235312`*^9, 3.6358154179875464`*^9}, {
+  3.635815499082185*^9, 3.635815521354459*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Primary", " ", "Code", " ", "block", " ", "for", " ", "sieve"}], 
+   " ", "*)"}], "\n", "\n"}]], "Code",
+ CellChangeTimes->{{3.635821149939395*^9, 3.6358211670673747`*^9}}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{707, 817},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (November 20, 2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 100, 1, 90, "Title"],
+Cell[682, 25, 142, 3, 49, "Subtitle"],
+Cell[827, 30, 105, 1, 28, "Subsubtitle"],
+Cell[CellGroupData[{
+Cell[957, 35, 215, 4, 79, "Section"],
+Cell[1175, 41, 133, 3, 30, "Text"],
+Cell[CellGroupData[{
+Cell[1333, 48, 1010, 25, 133, "Code"],
+Cell[2346, 75, 277, 6, 31, "Output"],
+Cell[2626, 83, 274, 6, 31, "Output"]
+}, Open  ]],
+Cell[2915, 92, 321, 9, 49, "Text"],
+Cell[3239, 103, 155, 4, 49, "Text"],
+Cell[CellGroupData[{
+Cell[3419, 111, 107, 1, 34, "Subsubsection"],
+Cell[3529, 114, 728, 18, 213, "Text"],
+Cell[CellGroupData[{
+Cell[4282, 136, 625, 12, 93, "Code"],
+Cell[4910, 150, 318, 7, 31, "Output"],
+Cell[5231, 159, 216, 4, 31, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5496, 169, 106, 1, 34, "Subsubsection"],
+Cell[5605, 172, 1959, 61, 325, "Text"],
+Cell[CellGroupData[{
+Cell[7589, 237, 946, 21, 96, "Code"],
+Cell[8538, 260, 1498, 37, 92, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[10085, 303, 143, 3, 43, "Subsection"],
+Cell[10231, 308, 787, 20, 108, "Text"],
+Cell[11021, 330, 230, 5, 93, "Code"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

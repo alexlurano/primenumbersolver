@@ -1,0 +1,98 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      3080,         89]
+NotebookOptionsPosition[      2839,         76]
+NotebookOutlinePosition[      3182,         91]
+CellTagsIndexPosition[      3139,         88]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"ConvertXmltoArray", "::", "usage"}], " ", "=", " ", 
+    "\"\<ConvertXmltoArray[a] returns a as array\>\""}], ";"}], "\n"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ConvertXmltoArray", "[", "initvar1_", "]"}], ":=", 
+   RowBox[{"(", "\n", 
+    RowBox[{"Catch", "[", "\n", 
+     RowBox[{
+      RowBox[{"Catch", "[", "\n", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Catch", "[", "\n", "\t", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"returnVal", "=", "False"}], ";", "\n", "\t", 
+             RowBox[{"virginPrimeList", "=", 
+              RowBox[{"{", "}"}]}], ";", "\n", "\t\t", 
+             RowBox[{"generateNewPrimes", "[", 
+              RowBox[{"primeList", ",", "initvar1"}], "]"}], ";", "\n", "\t", 
+             RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"startLength", "<", 
+                 RowBox[{"Length", "[", "primeList", "]"}]}], ",", 
+                RowBox[{"Throw", "[", 
+                 RowBox[{"True", ",", "b"}], "]"}]}], "]"}], "\n", "\n", "\t", 
+              RowBox[{"Throw", "[", 
+               RowBox[{"False", ",", "a"}], "]"}]}]}], "\n", ",", "a"}], "\n",
+            "]"}], "\n", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{"Print", "[", 
+             RowBox[{"initvar1", ",", "\"\<was not enough\>\""}], "]"}], 
+            ";"}], "*)"}], "\n", 
+          RowBox[{"ConvertXmltoArray", "[", 
+           RowBox[{"initvar1", "+", "1"}], "]"}]}], ";", "\n", 
+         RowBox[{"Throw", "[", 
+          RowBox[{"False", ",", "c"}], "]"}]}], "\n", ",", "b"}], "\n", "]"}],
+       "\n", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+        RowBox[{"Print", "[", 
+         RowBox[{"initvar1", ",", "\"\<was enough\>\"", ",", 
+          RowBox[{
+           RowBox[{"Length", "[", "primeList", "]"}], "-", "startLength"}], 
+          ",", "\"\<primes found\>\""}], "]"}], ";"}], "*)"}], "\n", ",", 
+      "c"}], "\n", "]"}], "\n", ")"}]}], ";"}], "\n"}], "Code",
+ CellChangeTimes->{{3.680218488069805*^9, 3.6802185329391875`*^9}, {
+  3.680218567426101*^9, 3.6802186048420134`*^9}, {3.680218654282797*^9, 
+  3.680218661332842*^9}, {3.680218748117475*^9, 3.6802187860035086`*^9}}]
+},
+WindowSize->{707, 816},
+WindowMargins->{{Automatic, 53}, {Automatic, 30}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 2278, 54, 508, "Code"]
+}
+]
+*)
+
+(* End of internal cache information *)

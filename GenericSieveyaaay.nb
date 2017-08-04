@@ -1,0 +1,524 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     21484,        515]
+NotebookOptionsPosition[     20820,        489]
+NotebookOutlinePosition[     21166,        504]
+CellTagsIndexPosition[     21123,        501]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Quadratic", " ", "sieve", " ", "to", " ", "factor", " ", "any", " ", 
+    "number", " ", "n", " ", "in", " ", "Exp", 
+    RowBox[{"(", 
+     RowBox[{"Sqrt", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"Ln", "[", "n", "]"}], 
+        RowBox[{"ln", "[", 
+         RowBox[{"ln", "[", "n", "]"}], "]"}]}], ")"}]}], ")"}], " ", 
+    "time"}], " ", "*)"}], "\n", "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"filename", " ", "=", " ", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+        "root", " ", "=", " ", 
+         "\"\<C:\\\\Users\\\\Alex\\\\Desktop\\\\SieveProj\\\\Data\>\""}], ",",
+         " ", 
+        RowBox[{"file", " ", "=", " ", "\"\<Primelist.xml\>\""}]}], "}"}], 
+      "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"!", " ", 
+       RowBox[{"DirectoryQ", "[", "root", "]"}]}], ",", " ", "\n", "  ", 
+      RowBox[{
+       RowBox[{"Print", "[", 
+        RowBox[{"Style", "[", 
+         RowBox[{
+          RowBox[{
+          "\"\<Directory '\>\"", " ", "<>", " ", "root", " ", "<>", " ", 
+           "\"\<' does not exist!\>\""}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"Red", ",", " ", "Bold", ",", " ", "Large"}], "}"}]}], 
+         "]"}], "]"}], ";", " ", 
+       RowBox[{"Quit", "[", "]"}]}]}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"!", " ", 
+       RowBox[{"FileExistsQ", "[", "filename", "]"}]}], ",", " ", "\n", "  ", 
+      RowBox[{
+       RowBox[{"Print", "[", 
+        RowBox[{"Style", "[", 
+         RowBox[{
+          RowBox[{
+          "\"\<File '\>\"", " ", "<>", " ", "filename", " ", "<>", " ", 
+           "\"\<' does not exist!\>\""}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"Red", ",", " ", "Bold", ",", " ", "Large"}], "}"}]}], 
+         "]"}], "]"}], ";", " ", 
+       RowBox[{"Quit", "[", "]"}]}]}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"primeList", "=", 
+     RowBox[{"Import", "[", "filename", "]"}]}], ";"}], "   ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "xml", " ", "file", " ", "doesnt", " ", "not", " ", "need", " ", 
+     "\"\<Data\>\"", " ", "tag", " ", "to", " ", "import"}], " ", "*)"}], 
+   "\n", "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"quadraticSieve", "[", "]"}], ":=", 
+     RowBox[{"(", "\n", 
+      RowBox[{
+       RowBox[{"bigN", "=", "15347"}], ";", "\n", 
+       RowBox[{"numOfPrimes", "=", "5"}], ";", " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+         RowBox[{"up", " ", "to", " ", "100", " ", "primes"}], ",", " ", 
+         RowBox[{
+         "the", " ", "number", " ", "15347", " ", "only", " ", "needed", " ", 
+          "4"}]}], " ", "*)"}], "\n", "\n", 
+       RowBox[{"smoothY", "=", 
+        RowBox[{"{", "}"}]}], ";", "\n", 
+       RowBox[{"smoothV", "=", 
+        RowBox[{"{", "}"}]}], ";", "\n", "\n", 
+       RowBox[{"finalesfunken", "=", "1"}], ";", "\n", 
+       RowBox[{"dunkenfunken", "=", "1"}], ";", "\n", 
+       RowBox[{"fullFactorList", "=", 
+        RowBox[{"{", "1", "}"}]}], ";", " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+         RowBox[{"initialize", " ", "final", " ", "factor", " ", "list"}], 
+         ",", " ", 
+         RowBox[{"1", " ", "is", " ", "always", " ", "a", " ", "factor"}]}], 
+        " ", "*)"}], "\n", 
+       RowBox[{"simpFactorBase", "=", 
+        RowBox[{"{", "2", "}"}]}], ";", " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+        "2", " ", "is", " ", "always", " ", "first", " ", "factor", " ", 
+         "but", " ", "the", " ", "legendresymbol", " ", "will", " ", "NOT", 
+         " ", "pick", " ", "it", " ", "up", " ", "for", " ", "you", " ", 
+         "always"}], " ", "*)"}], "\n", "\n", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Mod", "[", 
+           RowBox[{"bigN", ",", "2"}], "]"}], "\[Equal]", "0"}], ",", 
+         RowBox[{"Print", "[", "\"\<fuck your even number\>\"", "]"}]}], 
+        "]"}], ";", "\n", "\n", 
+       RowBox[{"Print", "[", " ", 
+        RowBox[{
+         RowBox[{"Length", "[", "primeList", "]"}], " ", 
+         "\"\<prime numbers on file\>\""}], "]"}], ";", "\n", "\n", 
+       RowBox[{
+        RowBox[{"getLegendre", "[", 
+         RowBox[{"n_", ",", "indx_"}], "]"}], ":=", " ", 
+        RowBox[{"JacobiSymbol", "[", 
+         RowBox[{"n", ",", 
+          RowBox[{"primeList", "[", 
+           RowBox[{"[", "indx", "]"}], "]"}]}], "]"}]}], ";", "\n", 
+       RowBox[{"getLegendre", "[", 
+        RowBox[{"bigN", ",", "2"}], "]"}], ";", "\n", 
+       RowBox[{"theTruthArray", "=", 
+        RowBox[{"{", "}"}]}], ";", "\n", 
+       RowBox[{
+        RowBox[{"Do", "[", "\n", "\t", 
+         RowBox[{
+          RowBox[{"Catch", "[", "\n", "\t", 
+           RowBox[{
+            RowBox[{"Catch", "[", "\n", "\t", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"Catch", "[", "\n", "\t\t", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"temp", "=", 
+                    RowBox[{"getLegendre", "[", 
+                    RowBox[{"bigN", ",", "i"}], "]"}]}], ";", "\n", "\t\t", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"temp", "\[Equal]", 
+                    RowBox[{"-", "1"}]}], ",", 
+                    RowBox[{"Throw", "[", 
+                    RowBox[{"Null", ",", "b"}], "]"}]}], "]"}], ";", "\n", 
+                   "\t\t", 
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"temp", "\[Equal]", "1"}], ",", 
+                    RowBox[{"Throw", "[", 
+                    RowBox[{"Null", ",", "a"}], "]"}]}], "]"}], ";", "\n", 
+                   "\t\t", 
+                   RowBox[{"AppendTo", "[", 
+                    RowBox[{"fullFactorList", ",", 
+                    RowBox[{"primeList", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ";", " ", 
+                   RowBox[{"(*", " ", 
+                    RowBox[{"woo", " ", "hoo", " ", "found", " ", "a", " ", 
+                    RowBox[{"factor", "!"}], " ", "drop", " ", "it", " ", 
+                    "from", " ", "the", " ", "simple", " ", "factor", " ", 
+                    "base"}], "*)"}], "\n", "\t\t", 
+                   RowBox[{"Throw", "[", 
+                    RowBox[{"Null", ",", "c"}], "]"}], ";"}], "\n", "\t\t", 
+                  ",", "a"}], "\n", "\t\t", "]"}], "\n", "\t\t", 
+                RowBox[{"AppendTo", "[", 
+                 RowBox[{"simpFactorBase", ",", 
+                  RowBox[{"primeList", "[", 
+                   RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ";"}], "\n", 
+              "\t\t", ",", "b"}], "\n", "\t\t", "]"}], "\n", "\t\t", ",", 
+            "c"}], "\n", "\t\t", "]"}], "\n", "\t", "\n", "\t", ",", "\n", 
+          "\t", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "1", ",", "100"}], "}"}]}], "\n", "]"}], "\n", 
+        RowBox[{"Print", "[", "fullFactorList", "]"}]}], ";", 
+       RowBox[{"Print", "[", "\"\<are factors\>\"", "]"}], ";", "\n", 
+       RowBox[{"simpFactorBase", "=", 
+        RowBox[{"simpFactorBase", "[", 
+         RowBox[{"[", 
+          RowBox[{"1", ";;", "numOfPrimes"}], "]"}], "]"}]}], ";", "\n", "\n", 
+       RowBox[{"bigNSqrt", "=", 
+        RowBox[{"Ceiling", "[", 
+         RowBox[{"Sqrt", "[", "bigN", "]"}], "]"}]}], ";", "\n", 
+       RowBox[{
+        RowBox[{"yUnSieved", "[", "t_", "]"}], ":=", 
+        RowBox[{
+         SuperscriptBox[
+          RowBox[{"(", 
+           RowBox[{"t", "+", "bigNSqrt"}], ")"}], "2"], "-", "bigN"}]}], ";", 
+       "\n", 
+       RowBox[{"ySieved", "=", 
+        RowBox[{"yUnSieved", "[", 
+         RowBox[{"Range", "[", "99", "]"}], "]"}]}], ";", "\n", 
+       RowBox[{"PrependTo", "[", 
+        RowBox[{"ySieved", ",", 
+         RowBox[{"yUnSieved", "[", "0", "]"}]}], "]"}], ";", "\n", 
+       RowBox[{"y2Sieved", "=", "ySieved"}], ";", "\n", "\n", 
+       RowBox[{"Print", "[", "\"\<doblocknumba2\>\"", "]"}], ";", "\n", 
+       RowBox[{
+        RowBox[{"Do", "[", "\n", 
+         RowBox[{
+          RowBox[{"Do", "[", "\n", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"curPrime", "=", 
+              RowBox[{"simpFactorBase", "[", 
+               RowBox[{"[", "j", "]"}], "]"}]}], ";", "\n", 
+             RowBox[{"curY", "=", 
+              RowBox[{"y2Sieved", "[", 
+               RowBox[{"[", "i", "]"}], "]"}]}], ";", "\n", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Mod", "[", 
+                 RowBox[{"curY", ",", "curPrime"}], "]"}], "\[Equal]", "0"}], 
+               ",", 
+               RowBox[{
+                RowBox[{"tempor", "=", 
+                 RowBox[{"(", 
+                  RowBox[{"curY", "/", "curPrime"}], ")"}]}], ";", 
+                RowBox[{"y2Sieved", "=", 
+                 RowBox[{"ReplacePart", "[", 
+                  RowBox[{"y2Sieved", ",", 
+                   RowBox[{"i", "\[Rule]", 
+                    RowBox[{"(", "tempor", ")"}]}]}], "]"}]}], ";", "\n", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"tempor", "\[Equal]", "1"}], ",", 
+                  RowBox[{
+                   RowBox[{"AppendTo", "[", 
+                    RowBox[{"smoothY", ",", 
+                    RowBox[{"ySieved", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ";", 
+                   RowBox[{"AppendTo", "[", 
+                    RowBox[{"smoothV", ",", "i"}], "]"}], ";"}]}], "]"}]}]}], 
+              "\n", "]"}], ";"}], "\n", "\n", "\n", ",", "\n", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", "100"}], "}"}]}], "\n", "]"}], "\n", 
+          ",", "\n", 
+          RowBox[{"{", 
+           RowBox[{"j", ",", "1", ",", 
+            RowBox[{"Length", "[", "simpFactorBase", "]"}]}], "}"}]}], "\n", 
+         "]"}], "\n", 
+        RowBox[{"Print", "[", "\"\<enddoblock2\>\"", "]"}]}], ";", "\n", 
+       "ySieved", ";", "\n", "y2Sieved", ";", "\n", 
+       RowBox[{"smoothY", "=", 
+        RowBox[{"Sort", "[", "smoothY", "]"}]}], ";", "\n", 
+       RowBox[{"smoothV", "=", 
+        RowBox[{"Sort", "[", "smoothV", "]"}]}], ";", "\n", "\n", 
+       RowBox[{"(*", " ", 
+        RowBox[{"smooth", " ", "y", " ", "numbers", " ", "found"}], " ", 
+        "*)"}], "\n", 
+       RowBox[{"smoothYLength", "=", 
+        RowBox[{"Length", "[", "smoothY", "]"}]}], ";", "\n", 
+       RowBox[{"simpFactLength", "=", 
+        RowBox[{"Length", "[", "simpFactorBase", "]"}]}], ";", "\n", 
+       RowBox[{
+        RowBox[{"dummyfun", "[", 
+         RowBox[{"zuh_", ",", "b_"}], "]"}], ":=", "0"}], ";", "\n", 
+       RowBox[{
+        RowBox[{"dummyOne", "[", 
+         RowBox[{"zuh_", ",", "b_"}], "]"}], ":=", "1"}], ";", "\n", 
+       RowBox[{"yExpAr", "=", 
+        RowBox[{"Array", "[", 
+         RowBox[{"dummyfun", ",", 
+          RowBox[{"{", 
+           RowBox[{"smoothYLength", ",", "simpFactLength"}], "}"}]}], "]"}]}],
+        ";", " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{"hardcoded", " ", "num", " ", "careful"}], " ", "*)"}], "\n", 
+       RowBox[{"smoothExpAr", "=", 
+        RowBox[{"{", "}"}]}], ";", "\n", 
+       RowBox[{"Print", "[", "\"\<doblock3\>\"", "]"}], ";", "\n", 
+       RowBox[{
+        RowBox[{"Do", "[", "\n", 
+         RowBox[{
+          RowBox[{"Do", "[", "\n", "\n", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"curPrime", "=", 
+              RowBox[{"simpFactorBase", "[", 
+               RowBox[{"[", "j", "]"}], "]"}]}], ";", "\n", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Mod", "[", 
+                 RowBox[{
+                  RowBox[{"smoothY", "[", 
+                   RowBox[{"[", "i", "]"}], "]"}], ",", "curPrime"}], "]"}], 
+                "\[Equal]", "0"}], ",", 
+               RowBox[{
+                RowBox[{"yExpAr", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"i", ",", "j"}], "]"}], "]"}], "=", 
+                RowBox[{
+                 RowBox[{"yExpAr", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "]"}], "+", "1"}]}]}], 
+              "]"}]}], "\n", ",", "\n", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", "1", ",", "smoothYLength"}], "}"}]}], "\n", 
+           "]"}], "\n", ",", "\n", 
+          RowBox[{"{", 
+           RowBox[{"j", ",", "1", ",", "simpFactLength"}], "}"}]}], "\n", 
+         "]"}], "\n", 
+        RowBox[{"Print", "[", "\"\<enddoblock3\>\"", "]"}]}], ";", "\n", "\n",
+        "\n", 
+       RowBox[{
+        RowBox[{"Catch", "[", "\n", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Do", "[", "\n", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"fakeSol", "=", "0"}], ";", "\n", 
+              RowBox[{"Do", "[", "\n", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"fakeSol", "=", 
+                  RowBox[{"fakeSol", "+", 
+                   RowBox[{"yExpAr", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", ",", "j"}], "]"}], "]"}]}]}], ";"}], "\n", 
+                ",", "\n", 
+                RowBox[{"{", 
+                 RowBox[{"i", ",", "1", ",", "smoothYLength"}], "}"}]}], "\n",
+                "]"}], ";", "\n", 
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"Mod", "[", 
+                  RowBox[{"fakeSol", ",", "2"}], "]"}], "\[NotEqual]", "0"}], 
+                ",", 
+                RowBox[{"Throw", "[", 
+                 RowBox[{
+                  RowBox[{
+                  "Print", "[", "\"\<Please use less prime numbres\>\"", 
+                   "]"}], ",", "a"}], "]"}]}], "]"}], ";"}], "\n", ",", "\n", 
+             RowBox[{"{", 
+              RowBox[{"j", ",", "1", ",", "simpFactLength"}], "}"}]}], "\n", 
+            "]"}], ";", "\n", "\n", 
+           RowBox[{"leftNullSpace", "=", 
+            RowBox[{"Table", "[", 
+             RowBox[{"1", ",", 
+              RowBox[{"{", 
+               RowBox[{"i", ",", "smoothYLength"}], "}"}]}], "]"}]}], ";"}], 
+          "\n", ",", "a"}], "\n", "]"}], "\n", "\n", "\n", 
+        RowBox[{"Do", "[", "\n", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"finalesfunken", "=", 
+            RowBox[{"(", 
+             RowBox[{"finalesfunken", "*", 
+              RowBox[{"smoothY", "[", 
+               RowBox[{"[", "i", "]"}], "]"}]}], ")"}]}], ";", "\n", 
+           RowBox[{"dunkenfunken", "=", 
+            RowBox[{"(", 
+             RowBox[{"dunkenfunken", "*", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"bigNSqrt", "+", 
+                 RowBox[{"smoothV", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "-", "1"}], ")"}], "^", 
+               "2"}]}], ")"}]}], ";"}], "\n", ",", "\n", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "1", ",", 
+            RowBox[{"Length", "[", "smoothY", "]"}]}], "}"}]}], "\n", "]"}], 
+        "\n", 
+        RowBox[{"finalesfunken", "=", 
+         RowBox[{"Sqrt", "[", "finalesfunken", "]"}]}]}], ";", "\n", 
+       RowBox[{"dunkenfunken", "=", 
+        RowBox[{"Sqrt", "[", "dunkenfunken", "]"}]}], ";", "\n", "\n", 
+       RowBox[{"Print", "[", "\"\<here tehy come nigger\>\"", "]"}], ";", 
+       "\n", "\n", 
+       RowBox[{"babiesFirstFactor", "=", 
+        RowBox[{"GCD", "[", 
+         RowBox[{"bigN", ",", 
+          RowBox[{"(", 
+           RowBox[{"dunkenfunken", "-", "finalesfunken"}], ")"}]}], "]"}]}], 
+       ";", "\n", "\n", 
+       RowBox[{"Print", "[", "\"\<fuckme\>\"", "]"}], ";", "\n", "\n", 
+       RowBox[{"babiesOtherFactor", "=", 
+        RowBox[{"bigN", "/", "babiesFirstFactor"}]}], ";"}], "\n", ")"}]}], 
+    ";"}], "\n", 
+   RowBox[{"quadraticSieve", "[", "]"}]}]}]], "Code",
+ CellChangeTimes->{{3.636556458571412*^9, 3.636556678586996*^9}, 
+   3.636556731042997*^9, {3.6365568175639453`*^9, 3.6365568204841127`*^9}, {
+   3.636556853114979*^9, 3.6365568578442492`*^9}, {3.636556958833026*^9, 
+   3.6365570059287195`*^9}, {3.636557180617711*^9, 3.6365571843369236`*^9}, {
+   3.636557247963563*^9, 3.6365572620803704`*^9}, {3.6365573452641277`*^9, 
+   3.636557455583438*^9}, {3.636557501396058*^9, 3.6365575365000663`*^9}, {
+   3.636557569221938*^9, 3.6365576258001738`*^9}, {3.636559605879428*^9, 
+   3.6365596981747065`*^9}, {3.636560074959258*^9, 3.636560087709987*^9}, {
+   3.636560341318493*^9, 3.6365604494136753`*^9}, {3.636560980881074*^9, 
+   3.636561002040284*^9}, {3.6365610876391797`*^9, 3.6365611026470385`*^9}, 
+   3.6365611459925175`*^9, {3.6365613115819883`*^9, 3.6365613412526855`*^9}, 
+   3.6365614054123554`*^9, {3.6365615787152677`*^9, 3.6365615811064043`*^9}, {
+   3.636561881342577*^9, 3.636561921117852*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"410", " ", "\<\"prime numbers on file\"\>"}]], "Print",
+ CellChangeTimes->{
+  3.6365596995917883`*^9, 3.636560091158184*^9, 3.63656034931495*^9, {
+   3.6365603905293074`*^9, 3.636560451301783*^9}, 3.6365609897375803`*^9, 
+   3.6365610267206955`*^9, {3.636561092522459*^9, 3.6365611030620623`*^9}, {
+   3.636561319936466*^9, 3.636561342135736*^9}, 3.6365614060793934`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"1", ",", "103", ",", "149"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.6365596995917883`*^9, 3.636560091158184*^9, 3.63656034931495*^9, {
+   3.6365603905293074`*^9, 3.636560451301783*^9}, 3.6365609897375803`*^9, 
+   3.6365610267206955`*^9, {3.636561092522459*^9, 3.6365611030620623`*^9}, {
+   3.636561319936466*^9, 3.636561342135736*^9}, 3.636561406085394*^9}],
+
+Cell[BoxData["\<\"are factors\"\>"], "Print",
+ CellChangeTimes->{
+  3.6365596995917883`*^9, 3.636560091158184*^9, 3.63656034931495*^9, {
+   3.6365603905293074`*^9, 3.636560451301783*^9}, 3.6365609897375803`*^9, 
+   3.6365610267206955`*^9, {3.636561092522459*^9, 3.6365611030620623`*^9}, {
+   3.636561319936466*^9, 3.636561342135736*^9}, 3.636561406090394*^9}],
+
+Cell[BoxData["\<\"doblocknumba2\"\>"], "Print",
+ CellChangeTimes->{
+  3.6365596995917883`*^9, 3.636560091158184*^9, 3.63656034931495*^9, {
+   3.6365603905293074`*^9, 3.636560451301783*^9}, 3.6365609897375803`*^9, 
+   3.6365610267206955`*^9, {3.636561092522459*^9, 3.6365611030620623`*^9}, {
+   3.636561319936466*^9, 3.636561342135736*^9}, 3.636561406090394*^9}],
+
+Cell[BoxData["\<\"enddoblock2\"\>"], "Print",
+ CellChangeTimes->{
+  3.6365596995917883`*^9, 3.636560091158184*^9, 3.63656034931495*^9, {
+   3.6365603905293074`*^9, 3.636560451301783*^9}, 3.6365609897375803`*^9, 
+   3.6365610267206955`*^9, {3.636561092522459*^9, 3.6365611030620623`*^9}, {
+   3.636561319936466*^9, 3.636561342135736*^9}, 3.6365614060983944`*^9}],
+
+Cell[BoxData["\<\"doblock3\"\>"], "Print",
+ CellChangeTimes->{
+  3.6365596995917883`*^9, 3.636560091158184*^9, 3.63656034931495*^9, {
+   3.6365603905293074`*^9, 3.636560451301783*^9}, 3.6365609897375803`*^9, 
+   3.6365610267206955`*^9, {3.636561092522459*^9, 3.6365611030620623`*^9}, {
+   3.636561319936466*^9, 3.636561342135736*^9}, 3.636561406099395*^9}],
+
+Cell[BoxData["\<\"enddoblock3\"\>"], "Print",
+ CellChangeTimes->{
+  3.6365596995917883`*^9, 3.636560091158184*^9, 3.63656034931495*^9, {
+   3.6365603905293074`*^9, 3.636560451301783*^9}, 3.6365609897375803`*^9, 
+   3.6365610267206955`*^9, {3.636561092522459*^9, 3.6365611030620623`*^9}, {
+   3.636561319936466*^9, 3.636561342135736*^9}, 3.636561406099395*^9}],
+
+Cell[BoxData["\<\"here tehy come nigger\"\>"], "Print",
+ CellChangeTimes->{
+  3.6365596995917883`*^9, 3.636560091158184*^9, 3.63656034931495*^9, {
+   3.6365603905293074`*^9, 3.636560451301783*^9}, 3.6365609897375803`*^9, 
+   3.6365610267206955`*^9, {3.636561092522459*^9, 3.6365611030620623`*^9}, {
+   3.636561319936466*^9, 3.636561342135736*^9}, 3.6365614061003947`*^9}],
+
+Cell[BoxData["\<\"fuckme\"\>"], "Print",
+ CellChangeTimes->{
+  3.6365596995917883`*^9, 3.636560091158184*^9, 3.63656034931495*^9, {
+   3.6365603905293074`*^9, 3.636560451301783*^9}, 3.6365609897375803`*^9, 
+   3.6365610267206955`*^9, {3.636561092522459*^9, 3.6365611030620623`*^9}, {
+   3.636561319936466*^9, 3.636561342135736*^9}, 3.6365614061013947`*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1098, 817},
+WindowMargins->{{48, Automatic}, {Automatic, 60}},
+FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (November 20, 2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 16846, 395, 2779, "Code"],
+Cell[CellGroupData[{
+Cell[17450, 421, 395, 6, 23, "Print"],
+Cell[17848, 429, 400, 7, 23, "Print"],
+Cell[18251, 438, 359, 5, 23, "Print"],
+Cell[18613, 445, 361, 5, 23, "Print"],
+Cell[18977, 452, 361, 5, 23, "Print"],
+Cell[19341, 459, 356, 5, 23, "Print"],
+Cell[19700, 466, 359, 5, 23, "Print"],
+Cell[20062, 473, 371, 5, 23, "Print"],
+Cell[20436, 480, 356, 5, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

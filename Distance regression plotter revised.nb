@@ -1,0 +1,158 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      4748,        149]
+NotebookOptionsPosition[      4217,        126]
+NotebookOutlinePosition[      4561,        141]
+CellTagsIndexPosition[      4518,        138]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Distance Regression Plotter (revised)\
+\>", "Title",
+ CellChangeTimes->{{3.6802175785833054`*^9, 3.6802176190303807`*^9}}],
+
+Cell["8/14/2016\t\tAlex Gerhards", "Subtitle",
+ CellChangeTimes->{{3.6802176262460194`*^9, 3.680217633502703*^9}}],
+
+Cell["Insert description here", "Text",
+ CellChangeTimes->{{3.6802176438384075`*^9, 3.680217647118534*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Header", " ", "files"}], " ", "*)"}], "\n", 
+  RowBox[{"(*", " ", 
+   RowBox[{"global", " ", "variables", " ", 
+    RowBox[{"created", ":", "\n", "\t", 
+     RowBox[{"-", 
+      RowBox[{"primeList", ":", " ", 
+       RowBox[{
+        RowBox[{
+        "xml", " ", "file", " ", "of", " ", "primes", " ", "currently", " ", 
+         "in", " ", "use"}], "\n", "\t", "-", 
+        RowBox[{"filename", ":", " ", 
+         RowBox[{
+         "location", " ", "of", " ", "list", " ", "of", " ", 
+          "primes"}]}]}]}]}]}]}], "\n", "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"filename", " ", "=", " ", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+        "root", " ", "=", " ", 
+         "\"\<C:\\\\Users\\\\Alex\\\\Desktop\\\\SieveProj\\\\Data\>\""}], ",",
+         " ", 
+        RowBox[{"file", " ", "=", " ", "\"\<Primelist.xml\>\""}]}], "}"}], 
+      "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"!", " ", 
+       RowBox[{"DirectoryQ", "[", "root", "]"}]}], ",", " ", "\n", "  ", 
+      RowBox[{
+       RowBox[{"Print", "[", 
+        RowBox[{"Style", "[", 
+         RowBox[{
+          RowBox[{
+          "\"\<Directory '\>\"", " ", "<>", " ", "root", " ", "<>", " ", 
+           "\"\<' does not exist!\>\""}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"Red", ",", " ", "Bold", ",", " ", "Large"}], "}"}]}], 
+         "]"}], "]"}], ";", " ", 
+       RowBox[{"Quit", "[", "]"}]}]}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"!", " ", 
+       RowBox[{"FileExistsQ", "[", "filename", "]"}]}], ",", " ", "\n", "  ", 
+      RowBox[{
+       RowBox[{"Print", "[", 
+        RowBox[{"Style", "[", 
+         RowBox[{
+          RowBox[{
+          "\"\<File '\>\"", " ", "<>", " ", "filename", " ", "<>", " ", 
+           "\"\<' does not exist!\>\""}], ",", " ", 
+          RowBox[{"{", 
+           RowBox[{"Red", ",", " ", "Bold", ",", " ", "Large"}], "}"}]}], 
+         "]"}], "]"}], ";", " ", 
+       RowBox[{"Quit", "[", "]"}]}]}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"primeList", "=", 
+     RowBox[{"Import", "[", "filename", "]"}]}], ";", "   ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "xml", " ", "file", " ", "doesnt", " ", "not", " ", "need", " ", 
+      "\"\<Data\>\"", " ", "tag", " ", "to", " ", "import"}], " ", 
+     "*)"}]}]}]}]], "Code",
+ CellChangeTimes->{{3.6802176552388115`*^9, 3.6802177202879763`*^9}, {
+  3.6802177733448005`*^9, 3.6802178495601487`*^9}}],
+
+Cell["insert descripton here", "Text",
+ CellChangeTimes->{{3.6802178599732637`*^9, 3.680217862980912*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "list", " ", "of", " ", "included", " ", "mathematica", " ", "file", " ", 
+    "includes"}], " ", "*)"}], "\n", 
+  RowBox[{"Needs", "[", "\"\<PlotLegends`\>\"", "]"}]}]], "Code",
+ CellChangeTimes->{{3.680217884525767*^9, 3.680217885965741*^9}, {
+  3.6802179438140397`*^9, 3.680217986805271*^9}}],
+
+Cell[BoxData["\<\"C:\\\\Users\\\\Alex\\\\Desktop\\\\SieveProj\\\\Data\\\\\
+Primelist.xml\"\>"], "Output",
+ CellChangeTimes->{{3.680217890803256*^9, 3.6802178908378983`*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{958, 1008},
+WindowMargins->{{Automatic, -7}, {-7, Automatic}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (October 6, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 132, 3, 83, "Title"],
+Cell[714, 27, 114, 1, 49, "Subtitle"],
+Cell[831, 30, 107, 1, 29, "Text"],
+Cell[941, 33, 2582, 70, 248, "Code"],
+Cell[3526, 105, 106, 1, 29, "Text"],
+Cell[CellGroupData[{
+Cell[3657, 110, 356, 8, 68, "Code"],
+Cell[4016, 120, 173, 2, 30, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

@@ -1,0 +1,288 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      9983,        278]
+NotebookOptionsPosition[      9385,        255]
+NotebookOutlinePosition[      9728,        270]
+CellTagsIndexPosition[      9685,        267]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"filename", " ", "=", " ", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+      "root", " ", "=", " ", 
+       "\"\<C:\\\\Users\\\\Alex\\\\Desktop\\\\SieveProj\\\\Data\>\""}], ",", 
+      " ", 
+      RowBox[{"file", " ", "=", " ", "\"\<Primelist.txt\>\""}]}], "}"}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"!", " ", 
+     RowBox[{"DirectoryQ", "[", "root", "]"}]}], ",", " ", "\n", "  ", 
+    RowBox[{
+     RowBox[{"Print", "[", 
+      RowBox[{"Style", "[", 
+       RowBox[{
+        RowBox[{
+        "\"\<Directory '\>\"", " ", "<>", " ", "root", " ", "<>", " ", 
+         "\"\<' does not exist!\>\""}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"Red", ",", " ", "Bold", ",", " ", "Large"}], "}"}]}], "]"}],
+       "]"}], ";", " ", 
+     RowBox[{"Quit", "[", "]"}]}]}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"!", " ", 
+      RowBox[{"FileExistsQ", "[", "filename", "]"}]}], ",", " ", "\n", "  ", 
+     RowBox[{
+      RowBox[{"Print", "[", 
+       RowBox[{"Style", "[", 
+        RowBox[{
+         RowBox[{
+         "\"\<File '\>\"", " ", "<>", " ", "filename", " ", "<>", " ", 
+          "\"\<' does not exist!\>\""}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"Red", ",", " ", "Bold", ",", " ", "Large"}], "}"}]}], 
+        "]"}], "]"}], ";", " ", 
+      RowBox[{"Quit", "[", "]"}]}]}], "]"}], ";"}], "\n", 
+  RowBox[{"(*", 
+   RowBox[{"Start", " ", 
+    RowBox[{"using", " ", "'"}], 
+    RowBox[{"filename", "'"}]}], "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"primeList", "=", 
+   RowBox[{"Import", "[", 
+    RowBox[{"filename", ",", "\"\<Data\>\""}], "]"}]}], ";"}], "\n", 
+ RowBox[{"primeList", "//", "MatrixForm"}], "\n", 
+ RowBox[{
+  RowBox[{"v", "=", "primeList"}], ";"}], "\n", 
+ RowBox[{"candidate", "=", 
+  RowBox[{"Last", "[", "primeList", "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{"nextCandidate", "[", "n_", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Mod", "[", 
+        RowBox[{"n", ",", "2"}], "]"}], "\[Equal]", "0"}], ",", 
+      RowBox[{"Return", "[", "3", "]"}]}], "]"}], ";", " ", 
+    RowBox[{"n", "+", "2"}]}], ")"}]}], "\n", 
+ RowBox[{
+  RowBox[{"isitPrime", "[", "n_", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"For", "[", "\n", 
+     RowBox[{
+      RowBox[{"i", "=", "1"}], ",", 
+      RowBox[{"i", "<", "10"}], ",", " ", 
+      RowBox[{
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"Mod", "[", 
+          RowBox[{"n", ",", 
+           RowBox[{"v", "[", 
+            RowBox[{"[", 
+             RowBox[{"i", ",", "1"}], "]"}], "]"}]}], "]"}], ",", 
+         RowBox[{"Return", "[", "0", "]"}]}], "]"}], ";", " ", 
+       RowBox[{"i", "++"}]}]}], "\n", "]"}], 
+    RowBox[{"Return", "[", "True", "]"}]}], ")"}]}], "\n", 
+ RowBox[{"x", "=", "0"}], "\n", 
+ RowBox[{"While", "[", 
+  RowBox[{
+   RowBox[{"x", "<", "100"}], ",", "\n", 
+   RowBox[{"s", "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"nextCandidate", "[", "candidate", "]"}], "\n", "bonk"}], "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"isitPrime", "[", "s", "]"}], "\n", "primeList"}], "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Append", "[", 
+         RowBox[{"primeList", ",", "s"}], "]"}], "\n", "candidate"}], "=", 
+       RowBox[{
+        RowBox[{"Last", "[", "primeList", "]"}], "\n", 
+        RowBox[{"x", "++"}]}]}]}]}]}]}], 
+  "]"}], "\n", "primeList", "\n"}], "Code",
+ CellChangeTimes->{{3.635876505205535*^9, 3.6358767734368773`*^9}, {
+  3.635876827179951*^9, 3.6358768836611814`*^9}, {3.635876919346223*^9, 
+  3.635876933250018*^9}, {3.6358769710191784`*^9, 3.635877017322827*^9}, {
+  3.635877132034388*^9, 3.635877200585309*^9}, {3.635877247095969*^9, 
+  3.6358774877607346`*^9}, {3.6358775386556454`*^9, 3.6358776734933577`*^9}, {
+  3.6358777192309732`*^9, 3.635877766270664*^9}, {3.6358778004766207`*^9, 
+  3.635877857533884*^9}, {3.635877921661552*^9, 3.635877928108921*^9}, {
+  3.6358779696372957`*^9, 3.635878003251219*^9}, {3.6358781170597277`*^9, 
+  3.635878122355031*^9}, {3.635878156561988*^9, 3.635878198245372*^9}, {
+  3.6358782695124483`*^9, 3.6358783828339295`*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"2"},
+     {"3"},
+     {"5"},
+     {"7"},
+     {"11"},
+     {"13"},
+     {"17"},
+     {"19"},
+     {"23"},
+     {"29"}
+    },
+    GridBoxAlignment->{
+     "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+      "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellChangeTimes->{{3.6358779713543944`*^9, 3.635878004830309*^9}, 
+   3.6358781231350756`*^9, 3.6358781995764475`*^9, {3.635878257381754*^9, 
+   3.6358782892775784`*^9}, {3.6358783733243856`*^9, 3.6358783834669657`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", "29", "}"}]], "Output",
+ CellChangeTimes->{{3.6358779713543944`*^9, 3.635878004830309*^9}, 
+   3.6358781231350756`*^9, 3.6358781995764475`*^9, {3.635878257381754*^9, 
+   3.6358782892775784`*^9}, {3.6358783733243856`*^9, 3.635878383468966*^9}}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{{3.6358779713543944`*^9, 3.635878004830309*^9}, 
+   3.6358781231350756`*^9, 3.6358781995764475`*^9, {3.635878257381754*^9, 
+   3.6358782892775784`*^9}, {3.6358783733243856`*^9, 3.635878383469966*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Set", "::", "write"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Tag \[NoBreak]\\!\\(Times\\)\[NoBreak] in \[NoBreak]\\!\\(\
+\\(\\({29}\\)\\)\\\\ \\(\\({\\(\\({2}\\)\\), \\(\\({3}\\)\\), \
+\\(\\({5}\\)\\), \\(\\({7}\\)\\), \\(\\({11}\\)\\), \\(\\({13}\\)\\), \
+\\(\\({17}\\)\\), \\(\\({19}\\)\\), \\(\\({23}\\)\\), \\(\\({29}\\)\\), \
+\\(\\({31}\\)\\)}\\)\\)\\)\[NoBreak] is Protected. \\!\\(\\*ButtonBox[\\\"\
+\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/write\\\", ButtonNote -> \
+\\\"Set::write\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6358783834979677`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Set", "::", "write"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Tag \[NoBreak]\\!\\(Times\\)\[NoBreak] in \[NoBreak]\\!\\(\
+\\(\\({\\(\\({2}\\)\\), \\(\\({3}\\)\\), \\(\\({5}\\)\\), \\(\\({7}\\)\\), \
+\\(\\({11}\\)\\), \\(\\({13}\\)\\), \\(\\({17}\\)\\), \\(\\({19}\\)\\), \
+\\(\\({23}\\)\\), \\(\\({29}\\)\\)}\\)\\)\\\\ \\(\\((Null\\\\ \
+\\(\\(Return[True]\\)\\))\\)\\)\\)\[NoBreak] is Protected. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/General/write\\\", \
+ButtonNote -> \\\"Set::write\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6358783835259695`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Set", "::", "write"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Tag \[NoBreak]\\!\\(Times\\)\[NoBreak] in \[NoBreak]\\!\\(\
+\\(\\({31}\\)\\)\\\\ \\(\\((Null\\\\ \\(\\(Return[True]\\)\\))\\)\\)\\)\
+\[NoBreak] is Protected. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/write\\\", ButtonNote -> \
+\\\"Set::write\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.635878383552971*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"General", "::", "stop"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Further output of \[NoBreak]\\!\\(\\*StyleBox[\\(Set :: \
+write\\), \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed during this \
+calculation. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/stop\\\", ButtonNote -> \
+\\\"General::stop\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6358783835689716`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", "2", "}"}], ",", 
+   RowBox[{"{", "3", "}"}], ",", 
+   RowBox[{"{", "5", "}"}], ",", 
+   RowBox[{"{", "7", "}"}], ",", 
+   RowBox[{"{", "11", "}"}], ",", 
+   RowBox[{"{", "13", "}"}], ",", 
+   RowBox[{"{", "17", "}"}], ",", 
+   RowBox[{"{", "19", "}"}], ",", 
+   RowBox[{"{", "23", "}"}], ",", 
+   RowBox[{"{", "29", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.6358779713543944`*^9, 3.635878004830309*^9}, 
+   3.6358781231350756`*^9, 3.6358781995764475`*^9, {3.635878257381754*^9, 
+   3.6358782892775784`*^9}, {3.6358783733243856`*^9, 3.635878383572972*^9}}]
+}, Open  ]]
+},
+WindowSize->{707, 817},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (November 20, 2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 4261, 116, 493, "Code"],
+Cell[4843, 140, 899, 28, 176, "Output"],
+Cell[5745, 170, 271, 4, 31, "Output"],
+Cell[6019, 176, 248, 3, 31, "Output"],
+Cell[6270, 181, 697, 13, 21, "Message"],
+Cell[6970, 196, 710, 13, 21, "Message"],
+Cell[7683, 211, 532, 11, 21, "Message"],
+Cell[8218, 224, 529, 11, 21, "Message"],
+Cell[8750, 237, 619, 15, 31, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
